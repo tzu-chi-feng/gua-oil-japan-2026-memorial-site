@@ -140,12 +140,11 @@ export default function HomePage({ data }) {
                       { id: "ev00100", name: "平井家民宿", day: 1 }
                     ]}
                     stickers={[
-                      { id: "peach", src: "decorations/airplane_peach.png", x: 225, y: 38, width: 75, height: 42, rotate: -6 },
-                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 865, y: 145, width: 85, height: 50, rotate: 12 },
-                      { id: "dango", src: "decorations/snack_dango.png", x: 460, y: 145, width: 48, height: 48, rotate: -15 },
-                      { id: "gyutan", src: "decorations/food_gyutan.png", x: 225, y: 275, width: 70, height: 55, rotate: 6 },
-                      { id: "polaroid", src: "decorations/frame_polaroid.png", x: 865, y: 395, width: 52, height: 52, rotate: -8 },
-                      { id: "daruma", src: "decorations/daruma.png", x: 45, y: 460, width: 52, height: 52, rotate: -10 }
+                      { id: "peach", src: "decorations/airplane_peach.png", x: 230, y: 35, width: 140, height: 75, rotate: -6 },
+                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 885, y: 155, width: 150, height: 90, rotate: 12 },
+                      { id: "dango", src: "decorations/snack_dango.png", x: 580, y: 150, width: 90, height: 90, rotate: -12 },
+                      { id: "gyutan", src: "decorations/food_gyutan.png", x: 230, y: 285, width: 115, height: 95, rotate: 6 },
+                      { id: "daruma", src: "decorations/daruma.png", x: 55, y: 505, width: 90, height: 90, rotate: -8 }
                     ]}
                     title={`Day ${dayData.day} 路線圖`} 
                     day={dayData.day}
