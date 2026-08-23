@@ -44,12 +44,13 @@ export default function RouteMapAbstract({
   const VIEW_WIDTH = 1000;
   const X_START = 145;
   const X_END = 855;
-  const Y_START = 75;
-  const Y_GAP = 125; // 緊湊黃金行距，去除底部贅餘留白
+  const Y_START = 65;
+  const Y_GAP = 118; // 緊湊無縫行距
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  const VIEW_HEIGHT = Math.max(520, Y_START + totalRows * Y_GAP + 45);
+  // 緊貼最後一行底部文字，徹底移除底部預留空白
+  const VIEW_HEIGHT = 475;
 
   // 決定節點是否為「放大重點節點」（例如 2, 5, 8, 10, 16 號節點）
   const isEnlargedNode = (index) => {
@@ -80,7 +81,7 @@ export default function RouteMapAbstract({
     const x = X_START + col * xSpacing + ox;
     const y = Y_START + row * Y_GAP + oy + elevationOffset;
     const radius = isBig ? 19 : 15;
-    const fontSize = isBig ? 12.5 : 11;
+    const fontSize = isBig ? 13 : 11.5;
 
     return { 
       ...node, 
@@ -111,9 +112,9 @@ export default function RouteMapAbstract({
         d += ` Q ${midX} ${cpY}, ${curr.x} ${curr.y}`;
       } else {
         const isRightTurn = prev.row % 2 === 0;
-        const turnSpread = 66;
+        const turnSpread = 65;
         const arcX = isRightTurn ? Math.max(prev.x, curr.x) + turnSpread : Math.min(prev.x, curr.x) - turnSpread;
-        d += ` C ${arcX} ${prev.y + 16}, ${arcX} ${curr.y - 16}, ${curr.x} ${curr.y}`;
+        d += ` C ${arcX} ${prev.y + 15}, ${arcX} ${curr.y - 15}, ${curr.x} ${curr.y}`;
       }
     }
     return d;
@@ -122,16 +123,16 @@ export default function RouteMapAbstract({
   const pathData = generateOrganicPath();
 
   return (
-    <div className="w-full h-full relative flex flex-col items-center justify-center p-2 md:p-4 select-none">
+    <div className="w-full h-full relative flex flex-col items-center justify-center p-2 md:p-3 select-none">
       {title && (
-        <div className="mb-4 text-center">
+        <div className="mb-3 text-center">
           <span className="inline-block px-5 py-1.5 bg-[#f5efe6] rounded-full font-black text-xs md:text-sm tracking-widest text-[#5c4a3b] uppercase shadow-sm border border-[#e6dcce]">
             {title}
           </span>
         </div>
       )}
 
-      <div className="w-full relative overflow-hidden rounded-3xl bg-[#fdfbf7] shadow-md border border-[#e8dfd3] p-3">
+      <div className="w-full relative overflow-hidden rounded-3xl bg-[#fdfbf7] shadow-md border border-[#e8dfd3] p-2.5">
         <svg
           viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
           className="w-full h-auto"
@@ -171,7 +172,7 @@ export default function RouteMapAbstract({
             />
           </g>
 
-          {/* ================= 圖層 2: 景點節點 (咖啡色數字標籤與名稱) ================= */}
+          {/* ================= 圖層 2: 景點節點 (放大字級標籤與名稱) ================= */}
           <g>
             {positions.map((node) => {
               const lines = formatNodeName(node.name);
@@ -204,19 +205,19 @@ export default function RouteMapAbstract({
                     {node.index + 1}
                   </text>
 
-                  {/* 景點名稱標籤 */}
+                  {/* 景點名稱標籤（字級調大為 13.5px） */}
                   <text
                     x={node.x}
                     y={node.y + (node.isBig ? 34 : 29)}
                     textAnchor="middle"
                     fill={TEXT_COLOR}
-                    fontSize="11.5"
-                    fontWeight="700"
+                    fontSize="13.5"
+                    fontWeight="800"
                     fontFamily={FONT_FAMILY}
                     className="tracking-tight group-hover:fill-[#8c7355] transition-colors pointer-events-none"
                   >
                     {lines.map((line, lIdx) => (
-                      <tspan key={lIdx} x={node.x} dy={lIdx === 0 ? 0 : 14}>
+                      <tspan key={lIdx} x={node.x} dy={lIdx === 0 ? 0 : 16}>
                         {line}
                       </tspan>
                     ))}

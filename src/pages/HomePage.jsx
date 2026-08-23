@@ -140,16 +140,16 @@ export default function HomePage({ data }) {
                       { id: "ev00100", name: "平井家民宿", day: 1 }
                     ]}
                     stickers={[
-                      { id: "peach", src: "decorations/airplane_peach.png", x: 235, y: 32, width: 175, height: 90, rotate: -5 },
-                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 915, y: 135, width: 170, height: 105, rotate: 12 },
-                      { id: "gorilla", src: "decorations/gorilla.png", x: 745, y: 265, width: 145, height: 145, rotate: -8 },
-                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 240, y: 385, width: 175, height: 140, rotate: 4 },
-                      { id: "daruma", src: "decorations/daruma_transparent.png", x: 55, y: 445, width: 110, height: 110, rotate: -8 }
+                      { id: "peach", src: "decorations/airplane_peach.png", x: 240, y: 30, width: 175, height: 90, rotate: -5 },
+                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 915, y: 125, width: 170, height: 105, rotate: 12 },
+                      { id: "gorilla", src: "decorations/gorilla.png", x: 745, y: 245, width: 145, height: 145, rotate: -8 },
+                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 500, y: 285, width: 170, height: 135, rotate: 4 },
+                      { id: "daruma", src: "decorations/daruma_transparent.png", x: 55, y: 410, width: 105, height: 105, rotate: -8 }
                     ]}
                     bubbles={[
-                      { id: "b1", x: 710, y: 165, text: "猩猩之握被包在免稅袋...只好再買一次 🦍", rotate: 2 },
-                      { id: "b2", x: 140, y: 155, text: "水溝蓋卡被油屁股折到了 嘿嘿 🍑", rotate: -3 },
-                      { id: "b3", x: 240, y: 280, text: "煎餃贏過八方雲集！杏仁豆腐微酸超讚 🥟", rotate: -2 }
+                      { id: "b1", x: 710, y: 155, text: "猩猩之握被包在免稅袋...只好再買一次 🦍", rotate: 2 },
+                      { id: "b2", x: 140, y: 145, text: "水溝蓋卡被油屁股折到了 嘿嘿 🍑", rotate: -3 },
+                      { id: "b3", x: 350, y: 360, text: "煎餃贏過八方雲集！杏仁豆腐微酸超讚 🥟", rotate: -2 }
                     ]}
                     title={`Day ${dayData.day} 路線圖`} 
                     day={dayData.day}
