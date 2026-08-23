@@ -142,8 +142,8 @@ export default function HomePage({ data }) {
                     stickers={[
                       { id: "peach", src: "decorations/airplane_peach.png", x: 230, y: 35, width: 140, height: 75, rotate: -6 },
                       { id: "skyliner", src: "decorations/train_skyliner.png", x: 885, y: 155, width: 150, height: 90, rotate: 12 },
-                      { id: "dango", src: "decorations/snack_dango.png", x: 580, y: 150, width: 90, height: 90, rotate: -12 },
-                      { id: "gyutan", src: "decorations/food_gyutan.png", x: 230, y: 285, width: 115, height: 95, rotate: 6 },
+                      { id: "gorilla", src: "decorations/gorilla.png", x: 720, y: 160, width: 95, height: 95, rotate: -12 },
+                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 240, y: 295, width: 115, height: 95, rotate: 6 },
                       { id: "daruma", src: "decorations/daruma.png", x: 55, y: 505, width: 90, height: 90, rotate: -8 }
                     ]}
                     title={`Day ${dayData.day} 路線圖`} 
