@@ -1,10 +1,10 @@
 // src/components/RouteMapAbstract.jsx
 import React from 'react';
 
-const PRIMARY_COLOR = '#FE9A5F'; // travel-orange
+// 低彩度溫潤日系手帳咖啡色 (Low-saturation warm coffee brown)
+const COFFEE_COLOR = '#8c7355'; 
 const BG_COLOR = '#fdfbf7'; 
-const TEXT_COLOR = '#292524'; // stone-800
-const ACCENT_COLORS = ['#FE9A5F', '#38aaf7', '#e06d53', '#7cc7fb']; 
+const TEXT_COLOR = '#3a312a'; // 深焙咖啡黑
 const FONT_FAMILY = '"Kiwi Maru", serif';
 
 /**
@@ -30,7 +30,7 @@ function formatNodeName(name) {
 }
 
 /**
- * RouteMapAbstract: 具備手繪流線、置頂大貼紙與故事對話框的旅行手帳路線圖
+ * RouteMapAbstract: 具備日系咖啡手繪流線、置頂大貼紙與手帳故事便籤的質感路線圖
  */
 export default function RouteMapAbstract({ 
   nodes = [], 
@@ -42,33 +42,32 @@ export default function RouteMapAbstract({
   const baseUrl = import.meta.env.BASE_URL;
   const COLS = 4; // 每行 4 個節點
   const VIEW_WIDTH = 1000;
-  const X_START = 140;
-  const X_END = 860;
-  const Y_START = 120;
-  const Y_GAP = 155;
+  const X_START = 145;
+  const X_END = 855;
+  const Y_START = 105;
+  const Y_GAP = 165; // 拉大行距至 165px，大幅增加呼吸空間
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  const VIEW_HEIGHT = Math.max(680, Y_START + totalRows * Y_GAP + 70);
+  const VIEW_HEIGHT = Math.max(700, Y_START + totalRows * Y_GAP + 60);
 
-  // 決定節點是否為「放大重點節點」（隨機但確定性的錯落：例如 2, 5, 8, 10, 16 號節點變大）
+  // 決定節點是否為「放大重點節點」（例如 2, 5, 8, 10, 16 號節點）
   const isEnlargedNode = (index) => {
-    // 預設指定幾個關鍵景點放大（例如 Skyliner、唐吉訶德、王將、民宿）
     const enlargedIndices = [1, 4, 7, 9, 15]; // index 1 is #2, index 4 is #5, etc.
     return enlargedIndices.includes(index);
   };
 
-  // 固定的自然波動幅度
+  // 固定的自然微幅波動幅度
   const getOrganicOffset = (index) => {
-    const yOffsets = [-4, 6, -6, 4, 6, -4, 5, -4, -5, 4, -6, 4, 5, -5, 6, -4];
-    const xOffsets = [0, 4, -4, 0, 0, -4, 4, 0, 0, 5, -4, 0, 0, -4, 4, 0];
+    const yOffsets = [-3, 4, -4, 3, 4, -3, 3, -3, -3, 3, -4, 3, 3, -3, 4, -3];
+    const xOffsets = [0, 3, -3, 0, 0, -3, 3, 0, 0, 3, -3, 0, 0, -3, 3, 0];
     return {
       ox: xOffsets[index % xOffsets.length] || 0,
       oy: yOffsets[index % yOffsets.length] || 0
     };
   };
 
-  // 計算每個節點在手帳蛇形動線中的座標（變大時往上偏移 50px）
+  // 計算每個節點座標（放大時溫和往上偏移 22px，消除劇烈擠壓）
   const positions = nodes.map((node, i) => {
     const row = Math.floor(i / COLS);
     const colIndexInRow = i % COLS;
@@ -76,13 +75,13 @@ export default function RouteMapAbstract({
     const { ox, oy } = getOrganicOffset(i);
     const isBig = isEnlargedNode(i);
     
-    // 當數字標變大，定位往上 50px
-    const elevationOffset = isBig ? -50 : 0;
+    // 緩和的向上位移 -22px
+    const elevationOffset = isBig ? -22 : 0;
 
     const x = X_START + col * xSpacing + ox;
     const y = Y_START + row * Y_GAP + oy + elevationOffset;
-    const radius = isBig ? 24 : 17; // 放大時半徑 24px，普通 17px
-    const fontSize = isBig ? 15 : 12;
+    const radius = isBig ? 21 : 16; // 放大時半徑 21px，普通 16px
+    const fontSize = isBig ? 13.5 : 11.5;
 
     return { 
       ...node, 
@@ -97,7 +96,7 @@ export default function RouteMapAbstract({
     };
   });
 
-  // 產生帶有自然手繪微弧的平滑軌道路徑
+  // 產生帶有自然微弧的平滑咖啡色軌道路徑
   const generateOrganicPath = () => {
     if (positions.length === 0) return '';
     let d = `M ${positions[0].x} ${positions[0].y}`;
@@ -108,12 +107,12 @@ export default function RouteMapAbstract({
 
       if (prev.row === curr.row) {
         const midX = (prev.x + curr.x) / 2;
-        const waveOffset = (i % 2 === 0 ? 8 : -8) * (prev.row % 2 === 0 ? 1 : -1);
+        const waveOffset = (i % 2 === 0 ? 6 : -6) * (prev.row % 2 === 0 ? 1 : -1);
         const cpY = (prev.y + curr.y) / 2 + waveOffset;
         d += ` Q ${midX} ${cpY}, ${curr.x} ${curr.y}`;
       } else {
         const isRightTurn = prev.row % 2 === 0;
-        const turnSpread = 70;
+        const turnSpread = 72;
         const arcX = isRightTurn ? Math.max(prev.x, curr.x) + turnSpread : Math.min(prev.x, curr.x) - turnSpread;
         d += ` C ${arcX} ${prev.y + 20}, ${arcX} ${curr.y - 20}, ${curr.x} ${curr.y}`;
       }
@@ -122,19 +121,18 @@ export default function RouteMapAbstract({
   };
 
   const pathData = generateOrganicPath();
-  const dayColor = ACCENT_COLORS[(day - 1) % ACCENT_COLORS.length] || PRIMARY_COLOR;
 
   return (
     <div className="w-full h-full relative flex flex-col items-center justify-center p-2 md:p-4 select-none">
       {title && (
         <div className="mb-4 text-center">
-          <span className="inline-block px-5 py-1.5 bg-stone-100/90 rounded-full font-black text-xs md:text-sm tracking-widest text-stone-700 uppercase shadow-sm border border-stone-200/60">
+          <span className="inline-block px-5 py-1.5 bg-[#f5efe6] rounded-full font-black text-xs md:text-sm tracking-widest text-[#5c4a3b] uppercase shadow-sm border border-[#e6dcce]">
             {title}
           </span>
         </div>
       )}
 
-      <div className="w-full relative overflow-hidden rounded-3xl bg-[#fdfbf7] shadow-md border border-stone-200/80 p-3">
+      <div className="w-full relative overflow-hidden rounded-3xl bg-[#fdfbf7] shadow-md border border-[#e8dfd3] p-3">
         <svg
           viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
           className="w-full h-auto"
@@ -142,54 +140,54 @@ export default function RouteMapAbstract({
         >
           <defs>
             <filter id="nodeShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#000000" floodOpacity="0.18" />
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#3a312a" floodOpacity="0.15" />
             </filter>
             <filter id="stickerShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="1" dy="4" stdDeviation="5" floodColor="#44403c" floodOpacity="0.15" />
+              <feDropShadow dx="1" dy="4" stdDeviation="4" floodColor="#3a312a" floodOpacity="0.12" />
             </filter>
             <filter id="bubbleShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#78716c" floodOpacity="0.1" />
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#57483b" floodOpacity="0.08" />
             </filter>
           </defs>
 
-          {/* ================= 圖層 1: 底層軌道線條 ================= */}
+          {/* ================= 圖層 1: 低彩度咖啡色軌道線條 ================= */}
           <g className="pointer-events-none">
             <path
               d={pathData}
               fill="none"
-              stroke={dayColor}
-              strokeWidth="8"
-              strokeOpacity="0.16"
+              stroke={COFFEE_COLOR}
+              strokeWidth="7"
+              strokeOpacity="0.15"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
               d={pathData}
               fill="none"
-              stroke={dayColor}
-              strokeWidth="3.2"
+              stroke={COFFEE_COLOR}
+              strokeWidth="3"
               strokeDasharray="8,6"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </g>
 
-          {/* ================= 圖層 2: 景點節點 (數字標籤與名稱) ================= */}
+          {/* ================= 圖層 2: 景點節點 (咖啡色數字標籤與名稱) ================= */}
           <g>
             {positions.map((node) => {
               const lines = formatNodeName(node.name);
               return (
                 <g key={node.id} className="cursor-pointer group">
-                  {/* 數字徽章圓圈（隨機有大有小） */}
+                  {/* 數字徽章圓圈 */}
                   <circle
                     cx={node.x}
                     cy={node.y}
                     r={node.radius}
-                    fill={dayColor}
+                    fill={COFFEE_COLOR}
                     stroke="#ffffff"
-                    strokeWidth={node.isBig ? 4 : 3.5}
+                    strokeWidth={node.isBig ? 3.5 : 3}
                     filter="url(#nodeShadow)"
-                    className="transition-colors duration-200 group-hover:fill-fuji-blue-500"
+                    className="transition-colors duration-200 group-hover:fill-[#6e5840]"
                   />
 
                   {/* 數字序號 */}
@@ -210,13 +208,13 @@ export default function RouteMapAbstract({
                   {/* 景點名稱標籤 */}
                   <text
                     x={node.x}
-                    y={node.y + (node.isBig ? 38 : 32)}
+                    y={node.y + (node.isBig ? 34 : 29)}
                     textAnchor="middle"
                     fill={TEXT_COLOR}
                     fontSize="11.5"
                     fontWeight="700"
                     fontFamily={FONT_FAMILY}
-                    className="tracking-tight group-hover:fill-fuji-blue-600 transition-colors pointer-events-none"
+                    className="tracking-tight group-hover:fill-[#8c7355] transition-colors pointer-events-none"
                   >
                     {lines.map((line, lIdx) => (
                       <tspan key={lIdx} x={node.x} dy={lIdx === 0 ? 0 : 14}>
@@ -229,13 +227,13 @@ export default function RouteMapAbstract({
             })}
           </g>
 
-          {/* ================= 圖層 3: 故事對話框 (避開所有景點文字) ================= */}
+          {/* ================= 圖層 3: 精簡統一的手帳奶油便籤 (非彩虹色) ================= */}
           <g className="pointer-events-none">
             {bubbles.map((b, idx) => {
               const rot = b.rotate || 0;
-              const bgColor = b.bgColor || '#fef3c7';
-              const strokeColor = b.strokeColor || '#fde68a';
-              const textColor = b.textColor || '#78350f';
+              const bgColor = b.bgColor || '#fefcf8'; // 統一溫潤米白手作便籤
+              const strokeColor = b.strokeColor || '#ded5c7';
+              const textColor = b.textColor || '#57483b'; // 深咖啡文字
               const textWidth = b.text.length * 11 + 24;
               
               return (
@@ -252,7 +250,7 @@ export default function RouteMapAbstract({
                     rx={14}
                     fill={bgColor}
                     stroke={strokeColor}
-                    strokeWidth="1.5"
+                    strokeWidth="1.2"
                   />
                   <text
                     x="0"

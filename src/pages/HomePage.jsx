@@ -140,19 +140,16 @@ export default function HomePage({ data }) {
                       { id: "ev00100", name: "平井家民宿", day: 1 }
                     ]}
                     stickers={[
-                      { id: "peach", src: "decorations/airplane_peach.png", x: 240, y: 40, width: 210, height: 110, rotate: -6 },
-                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 935, y: 155, width: 190, height: 115, rotate: 15 },
-                      { id: "gorilla", src: "decorations/gorilla.png", x: 740, y: 195, width: 175, height: 175, rotate: -8 },
-                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 245, y: 335, width: 200, height: 160, rotate: 5 },
-                      { id: "daruma", src: "decorations/daruma_transparent.png", x: 55, y: 535, width: 135, height: 135, rotate: -8 }
+                      { id: "peach", src: "decorations/airplane_peach.png", x: 240, y: 45, width: 210, height: 110, rotate: -5 },
+                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 910, y: 180, width: 195, height: 120, rotate: 12 },
+                      { id: "gorilla", src: "decorations/gorilla.png", x: 750, y: 350, width: 175, height: 175, rotate: -8 },
+                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 245, y: 510, width: 215, height: 170, rotate: 4 },
+                      { id: "daruma", src: "decorations/daruma_transparent.png", x: 55, y: 600, width: 130, height: 130, rotate: -8 }
                     ]}
                     bubbles={[
-                      { id: "b1", x: 95, y: 40, text: "抵達東京！🇯🇵", rotate: -4, bgColor: "#fef3c7", strokeColor: "#fde68a", textColor: "#78350f" },
-                      { id: "b2", x: 540, y: 35, text: "官網買票 刷臉進站超快 🚅", rotate: 2, bgColor: "#e0f2fe", strokeColor: "#bae6fd", textColor: "#075985" },
-                      { id: "b3", x: 135, y: 165, text: "水溝蓋卡被油屁股折到了 🍑", rotate: -3, bgColor: "#f3e8ff", strokeColor: "#e9d5ff", textColor: "#6b21a8" },
-                      { id: "b4", x: 670, y: 345, text: "猩猩之握被包在免稅袋...只好再買一次 🦍", rotate: 2, bgColor: "#fee2e2", strokeColor: "#fecaca", textColor: "#991b1b" },
-                      { id: "b5", x: 135, y: 360, text: "煎餃贏過八方雲集！🥟", rotate: -2, bgColor: "#fef9c3", strokeColor: "#fef08a", textColor: "#854d0e" },
-                      { id: "b6", x: 480, y: 505, text: "馬桶會自動開蓋！第一天累翻 晚安 💤", rotate: 2, bgColor: "#ecfdf5", strokeColor: "#a7f3d0", textColor: "#065f46" }
+                      { id: "b1", x: 710, y: 220, text: "猩猩之握被包在免稅袋...只好再買一次 🦍", rotate: 2 },
+                      { id: "b2", x: 140, y: 210, text: "水溝蓋卡被油屁股折到了 嘿嘿 🍑", rotate: -3 },
+                      { id: "b3", x: 240, y: 375, text: "煎餃贏過八方雲集！杏仁豆腐微酸超讚 🥟", rotate: -2 }
                     ]}
                     title={`Day ${dayData.day} 路線圖`} 
                     day={dayData.day}
