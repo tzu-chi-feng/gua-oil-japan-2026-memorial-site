@@ -14,7 +14,6 @@ function formatNodeName(name) {
   if (!name) return [''];
   if (name.length <= 6) return [name];
   
-  // 常見詞彙切割點
   if (name.includes(' Station')) {
     const parts = name.split(' Station');
     return [`${parts[0]} Station`, parts[1] || ''];
@@ -31,29 +30,29 @@ function formatNodeName(name) {
 }
 
 /**
- * RouteMapAbstract: 呈現具備 Figma Dynamic 手繪流線感與旅行手帳拼貼感的抽象路線圖
+ * RouteMapAbstract: 具備手繪流線、置頂大貼紙與故事對話框的旅行手帳路線圖
  */
 export default function RouteMapAbstract({ 
   nodes = [], 
   stickers = [],
+  bubbles = [],
   title = '', 
   day = 1 
 }) {
   const baseUrl = import.meta.env.BASE_URL;
   const COLS = 4; // 每行 4 個節點
   const VIEW_WIDTH = 1000;
-  const X_START = 135;
-  const X_END = 865;
+  const X_START = 140;
+  const X_END = 860;
   const Y_START = 95;
-  const Y_GAP = 140;
+  const Y_GAP = 145;
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  const VIEW_HEIGHT = Math.max(610, Y_START + totalRows * Y_GAP + 65);
+  const VIEW_HEIGHT = Math.max(630, Y_START + totalRows * Y_GAP + 65);
 
-  // 固定的自然波動幅度（讓排版有手繪錯落感，且每次 render 保持穩定一致）
+  // 固定的自然波動幅度
   const getOrganicOffset = (index) => {
-    // 預設一組自然微幅起伏的波浪 offset
     const yOffsets = [-6, 8, -8, 4, 8, -6, 7, -5, -7, 6, -8, 5, 6, -7, 8, -4];
     const xOffsets = [0, 4, -4, 0, 0, -5, 5, 0, 0, 6, -5, 0, 0, -4, 5, 0];
     return {
@@ -62,7 +61,7 @@ export default function RouteMapAbstract({
     };
   };
 
-  // 計算每個節點在手帳蛇形動線中的座標（加上自然微幅波動）
+  // 計算每個節點在手帳蛇形動線中的座標
   const positions = nodes.map((node, i) => {
     const row = Math.floor(i / COLS);
     const colIndexInRow = i % COLS;
@@ -74,7 +73,7 @@ export default function RouteMapAbstract({
     return { ...node, x, y, row, colIndexInRow, index: i };
   });
 
-  // 產生帶有自然手繪微弧與 Figma Dynamic 圓角轉彎的平滑軌道路徑
+  // 產生帶有自然手繪微弧的平滑軌道路徑
   const generateOrganicPath = () => {
     if (positions.length === 0) return '';
     let d = `M ${positions[0].x} ${positions[0].y}`;
@@ -84,20 +83,14 @@ export default function RouteMapAbstract({
       const curr = positions[i];
 
       if (prev.row === curr.row) {
-        // 同一行內的相鄰節點：採用帶有微弧的貝茲曲線，告別僵硬死板的直線
         const midX = (prev.x + curr.x) / 2;
-        // 依據位置產生自然的微幅上下弧度 (Sag / Arch)
         const waveOffset = (i % 2 === 0 ? 9 : -9) * (prev.row % 2 === 0 ? 1 : -1);
         const cpY = (prev.y + curr.y) / 2 + waveOffset;
-
         d += ` Q ${midX} ${cpY}, ${curr.x} ${curr.y}`;
       } else {
-        // 跨行轉彎：使用 Figma Dynamic 風格的大半徑平滑 U-Turn 雙控制點貝茲曲線
         const isRightTurn = prev.row % 2 === 0;
-        const turnSpread = 65; // 圓弧外擴半徑
+        const turnSpread = 68;
         const arcX = isRightTurn ? Math.max(prev.x, curr.x) + turnSpread : Math.min(prev.x, curr.x) - turnSpread;
-        
-        // 雙控制點貝茲曲線創造優雅的迴轉流線
         d += ` C ${arcX} ${prev.y + 15}, ${arcX} ${curr.y - 15}, ${curr.x} ${curr.y}`;
       }
     }
@@ -124,126 +117,165 @@ export default function RouteMapAbstract({
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* 柔和手帳陰影濾鏡 */}
             <filter id="nodeShadow" x="-30%" y="-30%" width="160%" height="160%">
               <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#000000" floodOpacity="0.18" />
             </filter>
             <filter id="stickerShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="1" dy="4" stdDeviation="4" floodColor="#44403c" floodOpacity="0.12" />
+              <feDropShadow dx="1" dy="4" stdDeviation="5" floodColor="#44403c" floodOpacity="0.15" />
+            </filter>
+            <filter id="bubbleShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#78716c" floodOpacity="0.1" />
             </filter>
           </defs>
 
-          {/* 1. 底層手繪感軌道光暈 (Underlay Glow Track) */}
-          <path
-            d={pathData}
-            fill="none"
-            stroke={dayColor}
-            strokeWidth="8"
-            strokeOpacity="0.16"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          {/* ================= 圖層 1: 底層軌道線條 ================= */}
+          <g className="pointer-events-none">
+            <path
+              d={pathData}
+              fill="none"
+              stroke={dayColor}
+              strokeWidth="8"
+              strokeOpacity="0.16"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d={pathData}
+              fill="none"
+              stroke={dayColor}
+              strokeWidth="3.2"
+              strokeDasharray="8,6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </g>
 
-          {/* 2. 主路線：Figma 手繪自然旅行虛線 (Organic Dashed Route) */}
-          <path
-            d={pathData}
-            fill="none"
-            stroke={dayColor}
-            strokeWidth="3.2"
-            strokeDasharray="8,6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          {/* ================= 圖層 2: 景點節點 (數字標籤與名稱) ================= */}
+          <g>
+            {positions.map((node) => {
+              const lines = formatNodeName(node.name);
+              return (
+                <g key={node.id} className="cursor-pointer group">
+                  {/* 數字徽章圓圈 */}
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r={18}
+                    fill={dayColor}
+                    stroke="#ffffff"
+                    strokeWidth="3.5"
+                    filter="url(#nodeShadow)"
+                    className="transition-colors duration-200 group-hover:fill-fuji-blue-500"
+                  />
 
-          {/* 3. 自由浮貼於空白處的大型手帳裝飾貼紙 (Large Floating Stickers) */}
-          {stickers.map((stk, idx) => {
-            const rot = stk.rotate || 0;
-            const w = stk.width || 80;
-            const h = stk.height || 80;
-            return (
-              <g 
-                key={stk.id || `sticker-${idx}`} 
-                transform={`translate(${stk.x}, ${stk.y}) rotate(${rot})`}
-                filter="url(#stickerShadow)"
-                className="transition-transform duration-300 hover:scale-105"
-              >
-                <image
-                  href={`${baseUrl}${stk.src}`}
-                  x={-w / 2}
-                  y={-h / 2}
-                  width={w}
-                  height={h}
-                  style={{ mixBlendMode: 'multiply' }}
-                  alt={stk.alt || 'decoration'}
-                />
-                {stk.label && (
+                  {/* 數字序號 */}
+                  <text
+                    x={node.x}
+                    y={node.y + 1}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fill="#ffffff"
+                    fontSize="12.5"
+                    fontWeight="bold"
+                    fontFamily={FONT_FAMILY}
+                    className="pointer-events-none"
+                  >
+                    {node.index + 1}
+                  </text>
+
+                  {/* 景點名稱標籤 */}
+                  <text
+                    x={node.x}
+                    y={node.y + 33}
+                    textAnchor="middle"
+                    fill={TEXT_COLOR}
+                    fontSize="11.5"
+                    fontWeight="700"
+                    fontFamily={FONT_FAMILY}
+                    className="tracking-tight group-hover:fill-fuji-blue-600 transition-colors pointer-events-none"
+                  >
+                    {lines.map((line, lIdx) => (
+                      <tspan key={lIdx} x={node.x} dy={lIdx === 0 ? 0 : 14}>
+                        {line}
+                      </tspan>
+                    ))}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+
+          {/* ================= 圖層 3: 故事對話框與手寫小小便簽 ================= */}
+          <g className="pointer-events-none">
+            {bubbles.map((b, idx) => {
+              const rot = b.rotate || 0;
+              const bgColor = b.bgColor || '#fef3c7'; // 預設溫暖鵝黃
+              const strokeColor = b.strokeColor || '#fde68a';
+              const textColor = b.textColor || '#78350f';
+              // 依文字長度估算對話框寬度
+              const textWidth = b.text.length * 11 + 24;
+              
+              return (
+                <g 
+                  key={b.id || `bubble-${idx}`} 
+                  transform={`translate(${b.x}, ${b.y}) rotate(${rot})`}
+                  filter="url(#bubbleShadow)"
+                >
+                  {/* 對話框底色與圓角便條邊框 */}
+                  <rect
+                    x={-textWidth / 2}
+                    y={-14}
+                    width={textWidth}
+                    height={28}
+                    rx={14}
+                    fill={bgColor}
+                    stroke={strokeColor}
+                    strokeWidth="1.5"
+                  />
+                  {/* 手寫便簽小文字 */}
                   <text
                     x="0"
-                    y={h / 2 + 14}
+                    y="1"
                     textAnchor="middle"
-                    fill="#78716c"
-                    fontSize="11"
+                    dominantBaseline="central"
+                    fill={textColor}
+                    fontSize="10.5"
+                    fontWeight="700"
                     fontFamily={FONT_FAMILY}
-                    className="italic font-bold"
+                    className="tracking-tight"
                   >
-                    {stk.label}
+                    {b.text}
                   </text>
-                )}
-              </g>
-            );
-          })}
+                </g>
+              );
+            })}
+          </g>
 
-          {/* 4. 景點節點：清晰數字徽章＋智慧雙行排版文字 */}
-          {positions.map((node) => {
-            const lines = formatNodeName(node.name);
-            return (
-              <g key={node.id} className="cursor-pointer group">
-                {/* 節點圓圈 (數字徽章) */}
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r={18}
-                  fill={dayColor}
-                  stroke="#ffffff"
-                  strokeWidth="3.5"
-                  filter="url(#nodeShadow)"
-                  className="transition-all duration-200 group-hover:scale-110"
-                />
-
-                {/* 數字序號 (1, 2, 3...) */}
-                <text
-                  x={node.x}
-                  y={node.y + 1}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill="#ffffff"
-                  fontSize="12.5"
-                  fontWeight="bold"
-                  fontFamily={FONT_FAMILY}
+          {/* ================= 圖層 4: 【置頂最上層】大貼紙 ================= */}
+          <g className="pointer-events-none">
+            {stickers.map((stk, idx) => {
+              const rot = stk.rotate || 0;
+              const w = stk.width || 80;
+              const h = stk.height || 80;
+              return (
+                <g 
+                  key={stk.id || `sticker-${idx}`} 
+                  transform={`translate(${stk.x}, ${stk.y}) rotate(${rot})`}
+                  filter="url(#stickerShadow)"
                 >
-                  {node.index + 1}
-                </text>
-
-                {/* 景點名稱標籤（支援雙行完整呈現） */}
-                <text
-                  x={node.x}
-                  y={node.y + 33}
-                  textAnchor="middle"
-                  fill={TEXT_COLOR}
-                  fontSize="11.5"
-                  fontWeight="700"
-                  fontFamily={FONT_FAMILY}
-                  className="tracking-tight group-hover:fill-fuji-blue-600 transition-colors"
-                >
-                  {lines.map((line, lIdx) => (
-                    <tspan key={lIdx} x={node.x} dy={lIdx === 0 ? 0 : 14}>
-                      {line}
-                    </tspan>
-                  ))}
-                </text>
-              </g>
-            );
-          })}
+                  <image
+                    href={`${baseUrl}${stk.src}`}
+                    x={-w / 2}
+                    y={-h / 2}
+                    width={w}
+                    height={h}
+                    style={{ mixBlendMode: 'multiply' }}
+                    alt={stk.alt || 'decoration'}
+                  />
+                </g>
+              );
+            })}
+          </g>
         </svg>
       </div>
     </div>
