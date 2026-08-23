@@ -44,16 +44,16 @@ export default function RouteMapAbstract({
   const VIEW_WIDTH = 1000;
   const X_START = 145;
   const X_END = 855;
-  const Y_START = 105;
-  const Y_GAP = 165; // 拉大行距至 165px，大幅增加呼吸空間
+  const Y_START = 75;
+  const Y_GAP = 125; // 緊湊黃金行距，去除底部贅餘留白
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  const VIEW_HEIGHT = Math.max(700, Y_START + totalRows * Y_GAP + 60);
+  const VIEW_HEIGHT = Math.max(520, Y_START + totalRows * Y_GAP + 45);
 
   // 決定節點是否為「放大重點節點」（例如 2, 5, 8, 10, 16 號節點）
   const isEnlargedNode = (index) => {
-    const enlargedIndices = [1, 4, 7, 9, 15]; // index 1 is #2, index 4 is #5, etc.
+    const enlargedIndices = [1, 4, 7, 9, 15];
     return enlargedIndices.includes(index);
   };
 
@@ -67,7 +67,7 @@ export default function RouteMapAbstract({
     };
   };
 
-  // 計算每個節點座標（放大時溫和往上偏移 22px，消除劇烈擠壓）
+  // 計算每個節點座標（放大時溫和往上偏移 18px）
   const positions = nodes.map((node, i) => {
     const row = Math.floor(i / COLS);
     const colIndexInRow = i % COLS;
@@ -75,13 +75,12 @@ export default function RouteMapAbstract({
     const { ox, oy } = getOrganicOffset(i);
     const isBig = isEnlargedNode(i);
     
-    // 緩和的向上位移 -22px
-    const elevationOffset = isBig ? -22 : 0;
+    const elevationOffset = isBig ? -18 : 0;
 
     const x = X_START + col * xSpacing + ox;
     const y = Y_START + row * Y_GAP + oy + elevationOffset;
-    const radius = isBig ? 21 : 16; // 放大時半徑 21px，普通 16px
-    const fontSize = isBig ? 13.5 : 11.5;
+    const radius = isBig ? 19 : 15;
+    const fontSize = isBig ? 12.5 : 11;
 
     return { 
       ...node, 
@@ -107,14 +106,14 @@ export default function RouteMapAbstract({
 
       if (prev.row === curr.row) {
         const midX = (prev.x + curr.x) / 2;
-        const waveOffset = (i % 2 === 0 ? 6 : -6) * (prev.row % 2 === 0 ? 1 : -1);
+        const waveOffset = (i % 2 === 0 ? 5 : -5) * (prev.row % 2 === 0 ? 1 : -1);
         const cpY = (prev.y + curr.y) / 2 + waveOffset;
         d += ` Q ${midX} ${cpY}, ${curr.x} ${curr.y}`;
       } else {
         const isRightTurn = prev.row % 2 === 0;
-        const turnSpread = 72;
+        const turnSpread = 66;
         const arcX = isRightTurn ? Math.max(prev.x, curr.x) + turnSpread : Math.min(prev.x, curr.x) - turnSpread;
-        d += ` C ${arcX} ${prev.y + 20}, ${arcX} ${curr.y - 20}, ${curr.x} ${curr.y}`;
+        d += ` C ${arcX} ${prev.y + 16}, ${arcX} ${curr.y - 16}, ${curr.x} ${curr.y}`;
       }
     }
     return d;
