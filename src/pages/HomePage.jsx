@@ -140,7 +140,7 @@ export default function HomePage({ data }) {
                       { id: "ev00100", name: "平井家民宿", day: 1 }
                     ]}
                     stickers={[
-                      { id: "peach", src: "decorations/airplane_peach.png", x: 85, y: 52, width: 250, height: 130, rotate: 8, flipX: true },
+                      { id: "peach", src: "decorations/airplane_peach.png", x: 50, y: 50, width: 250, height: 130, rotate: 8, flipX: true },
                       { id: "skyliner", src: "decorations/train_skyliner.png", x: 940, y: 125, width: 170, height: 105, rotate: 12 },
                       { id: "gorilla", src: "decorations/gorilla.png", x: 745, y: 235, width: 280, height: 280, rotate: -8 },
                       { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 500, y: 285, width: 170, height: 135, rotate: 4 },
