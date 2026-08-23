@@ -41,15 +41,15 @@ export default function RouteMapAbstract({
 }) {
   const baseUrl = import.meta.env.BASE_URL;
   const COLS = 4; // 每行 4 個節點
-  const VIEW_WIDTH = 960;
-  const X_START = 120;
-  const X_END = 840;
-  const Y_START = 90;
-  const Y_GAP = 135;
+  const VIEW_WIDTH = 1000;
+  const X_START = 135;
+  const X_END = 865;
+  const Y_START = 95;
+  const Y_GAP = 140;
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  const VIEW_HEIGHT = Math.max(580, Y_START + totalRows * Y_GAP + 60);
+  const VIEW_HEIGHT = Math.max(610, Y_START + totalRows * Y_GAP + 65);
 
   // 固定的自然波動幅度（讓排版有手繪錯落感，且每次 render 保持穩定一致）
   const getOrganicOffset = (index) => {

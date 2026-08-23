@@ -140,11 +140,11 @@ export default function HomePage({ data }) {
                       { id: "ev00100", name: "平井家民宿", day: 1 }
                     ]}
                     stickers={[
-                      { id: "peach", src: "decorations/airplane_peach.png", x: 230, y: 35, width: 145, height: 80, rotate: -6 },
-                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 885, y: 150, width: 155, height: 95, rotate: 12 },
-                      { id: "gorilla", src: "decorations/gorilla.png", x: 730, y: 155, width: 145, height: 145, rotate: -10 },
-                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 235, y: 285, width: 165, height: 135, rotate: 6 },
-                      { id: "daruma", src: "decorations/daruma_transparent.png", x: 55, y: 505, width: 110, height: 110, rotate: -8 }
+                      { id: "peach", src: "decorations/airplane_peach.png", x: 245, y: 38, width: 220, height: 115, rotate: -6 },
+                      { id: "skyliner", src: "decorations/train_skyliner.png", x: 905, y: 155, width: 210, height: 130, rotate: 12 },
+                      { id: "gorilla", src: "decorations/gorilla.png", x: 745, y: 165, width: 190, height: 190, rotate: -8 },
+                      { id: "gyoza", src: "decorations/餃子與杏仁豆腐.png", x: 235, y: 295, width: 225, height: 180, rotate: 5 },
+                      { id: "daruma", src: "decorations/daruma_transparent.png", x: 55, y: 525, width: 140, height: 140, rotate: -8 }
                     ]}
                     title={`Day ${dayData.day} 路線圖`} 
                     day={dayData.day}
