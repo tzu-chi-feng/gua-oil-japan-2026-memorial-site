@@ -1,10 +1,10 @@
 // src/components/RouteMapAbstract.jsx
 import React from 'react';
 
-// 低彩度溫潤日系手帳咖啡色 (Low-saturation warm coffee brown)
-const COFFEE_COLOR = '#8c7355'; 
+// 低彩度溫潤日系手帳灰藍色 (Low-saturation muted slate blue)
+const ROUTE_COLOR = '#52728c'; 
 const BG_COLOR = '#fdfbf7'; 
-const TEXT_COLOR = '#3a312a'; // 深焙咖啡黑
+const TEXT_COLOR = '#2d3748'; // 沉穩深灰黑
 const FONT_FAMILY = '"Kiwi Maru", serif';
 
 /**
@@ -30,7 +30,7 @@ function formatNodeName(name) {
 }
 
 /**
- * RouteMapAbstract: 具備日系咖啡手繪流線、置頂大貼紙與手帳故事便籤的質感路線圖
+ * RouteMapAbstract: 具備日系灰藍手繪流線、置頂大貼紙與手帳故事便籤的質感路線圖
  */
 export default function RouteMapAbstract({ 
   nodes = [], 
@@ -49,7 +49,6 @@ export default function RouteMapAbstract({
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  // 緊貼最後一行底部文字，徹底移除底部預留空白
   const VIEW_HEIGHT = 475;
 
   // 決定節點是否為「放大重點節點」（例如 2, 5, 8, 10, 16 號節點）
@@ -96,7 +95,7 @@ export default function RouteMapAbstract({
     };
   });
 
-  // 產生帶有自然微弧的平滑咖啡色軌道路徑
+  // 產生帶有自然微弧的平滑灰藍色軌道路徑
   const generateOrganicPath = () => {
     if (positions.length === 0) return '';
     let d = `M ${positions[0].x} ${positions[0].y}`;
@@ -126,13 +125,13 @@ export default function RouteMapAbstract({
     <div className="w-full h-full relative flex flex-col items-center justify-center p-2 md:p-3 select-none">
       {title && (
         <div className="mb-3 text-center">
-          <span className="inline-block px-5 py-1.5 bg-[#f5efe6] rounded-full font-black text-xs md:text-sm tracking-widest text-[#5c4a3b] uppercase shadow-sm border border-[#e6dcce]">
+          <span className="inline-block px-5 py-1.5 bg-[#edf2f7] rounded-full font-black text-xs md:text-sm tracking-widest text-[#334e68] uppercase shadow-sm border border-[#cbd5e1]">
             {title}
           </span>
         </div>
       )}
 
-      <div className="w-full relative overflow-hidden rounded-3xl bg-[#fdfbf7] shadow-md border border-[#e8dfd3] p-2.5">
+      <div className="w-full relative overflow-hidden rounded-3xl bg-[#fdfbf7] shadow-md border border-[#e2e8f0] p-2.5">
         <svg
           viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
           className="w-full h-auto"
@@ -140,31 +139,31 @@ export default function RouteMapAbstract({
         >
           <defs>
             <filter id="nodeShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#3a312a" floodOpacity="0.15" />
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#1e293b" floodOpacity="0.18" />
             </filter>
             <filter id="stickerShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="1" dy="4" stdDeviation="4" floodColor="#3a312a" floodOpacity="0.12" />
+              <feDropShadow dx="1" dy="4" stdDeviation="4" floodColor="#1e293b" floodOpacity="0.12" />
             </filter>
             <filter id="bubbleShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#57483b" floodOpacity="0.08" />
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#334155" floodOpacity="0.08" />
             </filter>
           </defs>
 
-          {/* ================= 圖層 1: 低彩度咖啡色軌道線條 ================= */}
+          {/* ================= 圖層 1: 低彩度灰藍色軌道線條 ================= */}
           <g className="pointer-events-none">
             <path
               d={pathData}
               fill="none"
-              stroke={COFFEE_COLOR}
+              stroke={ROUTE_COLOR}
               strokeWidth="7"
-              strokeOpacity="0.15"
+              strokeOpacity="0.16"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
               d={pathData}
               fill="none"
-              stroke={COFFEE_COLOR}
+              stroke={ROUTE_COLOR}
               strokeWidth="3"
               strokeDasharray="8,6"
               strokeLinecap="round"
@@ -172,7 +171,7 @@ export default function RouteMapAbstract({
             />
           </g>
 
-          {/* ================= 圖層 2: 景點節點 (放大字級標籤與名稱) ================= */}
+          {/* ================= 圖層 2: 景點節點 (灰藍色數字標籤與名稱) ================= */}
           <g>
             {positions.map((node) => {
               const lines = formatNodeName(node.name);
@@ -183,11 +182,11 @@ export default function RouteMapAbstract({
                     cx={node.x}
                     cy={node.y}
                     r={node.radius}
-                    fill={COFFEE_COLOR}
+                    fill={ROUTE_COLOR}
                     stroke="#ffffff"
                     strokeWidth={node.isBig ? 3.5 : 3}
                     filter="url(#nodeShadow)"
-                    className="transition-colors duration-200 group-hover:fill-[#6e5840]"
+                    className="transition-colors duration-200 group-hover:fill-[#3b5368]"
                   />
 
                   {/* 數字序號 */}
@@ -205,7 +204,7 @@ export default function RouteMapAbstract({
                     {node.index + 1}
                   </text>
 
-                  {/* 景點名稱標籤（字級調大為 13.5px） */}
+                  {/* 景點名稱標籤 */}
                   <text
                     x={node.x}
                     y={node.y + (node.isBig ? 34 : 29)}
@@ -214,7 +213,7 @@ export default function RouteMapAbstract({
                     fontSize="13.5"
                     fontWeight="800"
                     fontFamily={FONT_FAMILY}
-                    className="tracking-tight group-hover:fill-[#8c7355] transition-colors pointer-events-none"
+                    className="tracking-tight group-hover:fill-[#52728c] transition-colors pointer-events-none"
                   >
                     {lines.map((line, lIdx) => (
                       <tspan key={lIdx} x={node.x} dy={lIdx === 0 ? 0 : 16}>
