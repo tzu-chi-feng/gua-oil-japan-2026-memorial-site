@@ -44,33 +44,57 @@ export default function RouteMapAbstract({
   const VIEW_WIDTH = 1000;
   const X_START = 140;
   const X_END = 860;
-  const Y_START = 95;
-  const Y_GAP = 145;
+  const Y_START = 120;
+  const Y_GAP = 155;
 
   const xSpacing = (X_END - X_START) / (COLS - 1);
   const totalRows = Math.ceil(nodes.length / COLS);
-  const VIEW_HEIGHT = Math.max(630, Y_START + totalRows * Y_GAP + 65);
+  const VIEW_HEIGHT = Math.max(680, Y_START + totalRows * Y_GAP + 70);
+
+  // 決定節點是否為「放大重點節點」（隨機但確定性的錯落：例如 2, 5, 8, 10, 16 號節點變大）
+  const isEnlargedNode = (index) => {
+    // 預設指定幾個關鍵景點放大（例如 Skyliner、唐吉訶德、王將、民宿）
+    const enlargedIndices = [1, 4, 7, 9, 15]; // index 1 is #2, index 4 is #5, etc.
+    return enlargedIndices.includes(index);
+  };
 
   // 固定的自然波動幅度
   const getOrganicOffset = (index) => {
-    const yOffsets = [-6, 8, -8, 4, 8, -6, 7, -5, -7, 6, -8, 5, 6, -7, 8, -4];
-    const xOffsets = [0, 4, -4, 0, 0, -5, 5, 0, 0, 6, -5, 0, 0, -4, 5, 0];
+    const yOffsets = [-4, 6, -6, 4, 6, -4, 5, -4, -5, 4, -6, 4, 5, -5, 6, -4];
+    const xOffsets = [0, 4, -4, 0, 0, -4, 4, 0, 0, 5, -4, 0, 0, -4, 4, 0];
     return {
       ox: xOffsets[index % xOffsets.length] || 0,
       oy: yOffsets[index % yOffsets.length] || 0
     };
   };
 
-  // 計算每個節點在手帳蛇形動線中的座標
+  // 計算每個節點在手帳蛇形動線中的座標（變大時往上偏移 50px）
   const positions = nodes.map((node, i) => {
     const row = Math.floor(i / COLS);
     const colIndexInRow = i % COLS;
     const col = row % 2 === 0 ? colIndexInRow : (COLS - 1 - colIndexInRow);
     const { ox, oy } = getOrganicOffset(i);
+    const isBig = isEnlargedNode(i);
     
+    // 當數字標變大，定位往上 50px
+    const elevationOffset = isBig ? -50 : 0;
+
     const x = X_START + col * xSpacing + ox;
-    const y = Y_START + row * Y_GAP + oy;
-    return { ...node, x, y, row, colIndexInRow, index: i };
+    const y = Y_START + row * Y_GAP + oy + elevationOffset;
+    const radius = isBig ? 24 : 17; // 放大時半徑 24px，普通 17px
+    const fontSize = isBig ? 15 : 12;
+
+    return { 
+      ...node, 
+      x, 
+      y, 
+      row, 
+      colIndexInRow, 
+      index: i, 
+      isBig, 
+      radius, 
+      fontSize 
+    };
   });
 
   // 產生帶有自然手繪微弧的平滑軌道路徑
@@ -84,14 +108,14 @@ export default function RouteMapAbstract({
 
       if (prev.row === curr.row) {
         const midX = (prev.x + curr.x) / 2;
-        const waveOffset = (i % 2 === 0 ? 9 : -9) * (prev.row % 2 === 0 ? 1 : -1);
+        const waveOffset = (i % 2 === 0 ? 8 : -8) * (prev.row % 2 === 0 ? 1 : -1);
         const cpY = (prev.y + curr.y) / 2 + waveOffset;
         d += ` Q ${midX} ${cpY}, ${curr.x} ${curr.y}`;
       } else {
         const isRightTurn = prev.row % 2 === 0;
-        const turnSpread = 68;
+        const turnSpread = 70;
         const arcX = isRightTurn ? Math.max(prev.x, curr.x) + turnSpread : Math.min(prev.x, curr.x) - turnSpread;
-        d += ` C ${arcX} ${prev.y + 15}, ${arcX} ${curr.y - 15}, ${curr.x} ${curr.y}`;
+        d += ` C ${arcX} ${prev.y + 20}, ${arcX} ${curr.y - 20}, ${curr.x} ${curr.y}`;
       }
     }
     return d;
@@ -156,14 +180,14 @@ export default function RouteMapAbstract({
               const lines = formatNodeName(node.name);
               return (
                 <g key={node.id} className="cursor-pointer group">
-                  {/* 數字徽章圓圈 */}
+                  {/* 數字徽章圓圈（隨機有大有小） */}
                   <circle
                     cx={node.x}
                     cy={node.y}
-                    r={18}
+                    r={node.radius}
                     fill={dayColor}
                     stroke="#ffffff"
-                    strokeWidth="3.5"
+                    strokeWidth={node.isBig ? 4 : 3.5}
                     filter="url(#nodeShadow)"
                     className="transition-colors duration-200 group-hover:fill-fuji-blue-500"
                   />
@@ -175,7 +199,7 @@ export default function RouteMapAbstract({
                     textAnchor="middle"
                     dominantBaseline="central"
                     fill="#ffffff"
-                    fontSize="12.5"
+                    fontSize={node.fontSize}
                     fontWeight="bold"
                     fontFamily={FONT_FAMILY}
                     className="pointer-events-none"
@@ -186,7 +210,7 @@ export default function RouteMapAbstract({
                   {/* 景點名稱標籤 */}
                   <text
                     x={node.x}
-                    y={node.y + 33}
+                    y={node.y + (node.isBig ? 38 : 32)}
                     textAnchor="middle"
                     fill={TEXT_COLOR}
                     fontSize="11.5"
@@ -205,14 +229,13 @@ export default function RouteMapAbstract({
             })}
           </g>
 
-          {/* ================= 圖層 3: 故事對話框與手寫小小便簽 ================= */}
+          {/* ================= 圖層 3: 故事對話框 (避開所有景點文字) ================= */}
           <g className="pointer-events-none">
             {bubbles.map((b, idx) => {
               const rot = b.rotate || 0;
-              const bgColor = b.bgColor || '#fef3c7'; // 預設溫暖鵝黃
+              const bgColor = b.bgColor || '#fef3c7';
               const strokeColor = b.strokeColor || '#fde68a';
               const textColor = b.textColor || '#78350f';
-              // 依文字長度估算對話框寬度
               const textWidth = b.text.length * 11 + 24;
               
               return (
@@ -221,7 +244,6 @@ export default function RouteMapAbstract({
                   transform={`translate(${b.x}, ${b.y}) rotate(${rot})`}
                   filter="url(#bubbleShadow)"
                 >
-                  {/* 對話框底色與圓角便條邊框 */}
                   <rect
                     x={-textWidth / 2}
                     y={-14}
@@ -232,7 +254,6 @@ export default function RouteMapAbstract({
                     stroke={strokeColor}
                     strokeWidth="1.5"
                   />
-                  {/* 手寫便簽小文字 */}
                   <text
                     x="0"
                     y="1"
