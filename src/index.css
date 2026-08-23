@@ -7,6 +7,72 @@
 }
 
 body {
-  background-image: radial-gradient(#d1d5db 0.5px, transparent 0.5px);
-  background-size: 20px 20px; /* 方格/點狀紙質感 */
+  /* 手作紙張紋理：奶油色底搭配細微雜點 */
+  background-color: #fdfbf7;
+  background-image: 
+    radial-gradient(#e5e7eb 0.8px, transparent 0.8px),
+    url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  background-size: 24px 24px, auto;
+  color: #4a4a4a;
+  overflow-x: hidden; /* 防止絕對定位裝飾導致水平捲軸 */
 }
+
+/* 手寫風格字體工具 */
+.handwriting {
+  font-family: 'Kiwi Maru', serif;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+/* 自定義手寫風格邊框 */
+.hand-border {
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+/* 印章效果 */
+.stamp-effect {
+  opacity: 0.8;
+  mask-image: url("https://www.transparenttextures.com/patterns/stone-wash.png");
+}
+
+/* 擬真收據/熱感應紙效果 */
+.receipt-paper {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.receipt-edge-top {
+  background: radial-gradient(circle at 10px 0px, transparent 8px, white 8px);
+  background-size: 20px 20px;
+  top: -10px;
+}
+
+.receipt-edge-bottom {
+  background: radial-gradient(circle at 10px 20px, transparent 8px, white 8px);
+  background-size: 20px 20px;
+  bottom: -10px;
+}
+
+/* 撕紙邊緣效果 */
+.torn-edge {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  clip-path: polygon(
+    0% 0%, 5% 2%, 10% 0%, 15% 3%, 20% 0%, 25% 2%, 30% 0%, 35% 3%, 40% 0%, 45% 2%, 50% 0%, 55% 3%, 60% 0%, 65% 2%, 70% 0%, 75% 3%, 80% 0%, 85% 2%, 90% 0%, 95% 3%, 100% 0%,
+    100% 100%, 95% 98%, 90% 100%, 85% 97%, 80% 100%, 75% 98%, 70% 100%, 65% 97%, 60% 100%, 55% 98%, 50% 100%, 45% 97%, 40% 100%, 35% 98%, 30% 100%, 25% 97%, 20% 100%, 15% 98%, 10% 100%, 5% 97%, 0% 100%
+  );
+}
+
+/* 側邊標籤動畫 */
+.index-tab {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.index-tab:hover {
+  transform: translateX(-12px);
+}
+
+/* 貼紙白底消除 */
+.sticker-multiply {
+  mix-blend-mode: multiply;
+}
+
