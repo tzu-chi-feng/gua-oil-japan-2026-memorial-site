@@ -227,14 +227,15 @@ export default function RouteMapAbstract({
             })}
           </g>
 
-          {/* ================= 圖層 3: 精簡統一的手帳奶油便籤 (非彩虹色) ================= */}
+          {/* ================= 圖層 3: 精簡統一的手帳奶油便籤 (緊實版) ================= */}
           <g className="pointer-events-none">
             {bubbles.map((b, idx) => {
               const rot = b.rotate || 0;
-              const bgColor = b.bgColor || '#fefcf8'; // 統一溫潤米白手作便籤
+              const bgColor = b.bgColor || '#fefcf8';
               const strokeColor = b.strokeColor || '#ded5c7';
-              const textColor = b.textColor || '#57483b'; // 深咖啡文字
-              const textWidth = b.text.length * 11 + 24;
+              const textColor = b.textColor || '#57483b';
+              // 緊實包覆文字，去除兩側贅餘留白
+              const textWidth = b.text.length * 10.2 + 14;
               
               return (
                 <g 
@@ -244,10 +245,10 @@ export default function RouteMapAbstract({
                 >
                   <rect
                     x={-textWidth / 2}
-                    y={-14}
+                    y={-13}
                     width={textWidth}
-                    height={28}
-                    rx={14}
+                    height={26}
+                    rx={13}
                     fill={bgColor}
                     stroke={strokeColor}
                     strokeWidth="1.2"
@@ -270,16 +271,18 @@ export default function RouteMapAbstract({
             })}
           </g>
 
-          {/* ================= 圖層 4: 【置頂最上層】大貼紙 ================= */}
+          {/* ================= 圖層 4: 【置頂最上層】大貼紙 (支援鏡射) ================= */}
           <g className="pointer-events-none">
             {stickers.map((stk, idx) => {
               const rot = stk.rotate || 0;
               const w = stk.width || 80;
               const h = stk.height || 80;
+              const scaleX = stk.flipX ? -1 : 1;
+              const scaleY = stk.flipY ? -1 : 1;
               return (
                 <g 
                   key={stk.id || `sticker-${idx}`} 
-                  transform={`translate(${stk.x}, ${stk.y}) rotate(${rot})`}
+                  transform={`translate(${stk.x}, ${stk.y}) rotate(${rot}) scale(${scaleX}, ${scaleY})`}
                   filter="url(#stickerShadow)"
                 >
                   <image
