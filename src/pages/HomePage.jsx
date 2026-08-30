@@ -154,6 +154,41 @@ export default function HomePage({ data }) {
                     title={`Day ${dayData.day} 路線圖`} 
                     day={dayData.day}
                   />
+                ) : dayData.day === 2 ? (
+                  <RouteMapAbstract 
+                    nodes={[
+                      { id: "ev00055", name: "淺草", day: 2 },
+                      { id: "ev00056", name: "淺草寺 雷門", day: 2 },
+                      { id: "ev00057", name: "狸貓商店街", day: 2 },
+                      { id: "ev00069", name: "鳴門鯛燒本舖", day: 2 },
+                      { id: "ev00058", name: "Sensō-ji Jizo", day: 2 },
+                      { id: "ev00059", name: "淺草寺", day: 2 },
+                      { id: "ev00060", name: "淺草神社", day: 2 },
+                      { id: "ev00061", name: "仲見世商店街", day: 2 },
+                      { id: "ev00062", name: "一蘭 淺草店", day: 2 },
+                      { id: "ev00063", name: "隅田公園", day: 2 },
+                      { id: "ev00064", name: "東京晴空塔", day: 2 },
+                      { id: "ev00065", name: "思夢樂 Asakusa ROX", day: 2 },
+                      { id: "ev00066", name: "東京鐵塔", day: 2 },
+                      { id: "ev00067", name: "ワイズマート平井店", day: 2 },
+                      { id: "ev00068", name: "Lawson 平井站前店", day: 2 }
+                    ]}
+                    stickers={[
+                      { id: "shrine", src: "decorations/shrine_asakusa.png", x: 65, y: 55, width: 145, height: 145, rotate: -6 },
+                      { id: "raccoon", src: "decorations/raccoon.png", x: 740, y: 52, width: 175, height: 95, rotate: 6 },
+                      { id: "jellyfish", src: "decorations/Jellyfish.png", x: 380, y: 195, width: 155, height: 95, rotate: 6 },
+                      { id: "ramen", src: "decorations/ramen.png", x: 65, y: 285, width: 180, height: 105, rotate: -5 },
+                      { id: "skytree", src: "decorations/sky_tree.png", x: 745, y: 235, width: 185, height: 110, rotate: -6 },
+                      { id: "tokyotower", src: "decorations/tokyo_tower.png", x: 920, y: 395, width: 185, height: 110, rotate: 8 }
+                    ]}
+                    bubbles={[
+                      { id: "b1", x: 620, y: 125, text: "抽籤問旅程抽到大吉！✨", rotate: -2 },
+                      { id: "b2", x: 235, y: 345, text: "被碗底感謝字情勒喝光湯 🍜", rotate: 3 },
+                      { id: "b3", x: 505, y: 360, text: "隅田川裡居然有野生水母！🪼", rotate: -2 }
+                    ]}
+                    title={`Day ${dayData.day} 路線圖`} 
+                    day={dayData.day}
+                  />
                 ) : (
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
